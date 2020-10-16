@@ -31,6 +31,10 @@ services:
             dockerfile: ./dockerfiles/Dockerfile-importer
         container_name: "upa-importer"
         command: "bash /importer/entrypoint.sh"
+        ports:
+            - "4200:4200"
+        expose:
+            - "4200"
         depends_on: 
             - upa-postgres
             - upa-mongo
