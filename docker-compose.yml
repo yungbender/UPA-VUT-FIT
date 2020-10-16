@@ -1,0 +1,50 @@
+version: "3"
+services:
+    upa-mongo:
+        build:
+            context: .
+            dockerfile: ./dockerfiles/Dockerfile-mongo
+        container_name: "upa-mongo"
+        ports:
+            - "27017-27019:27017-27019"
+        expose:
+            - "27017-27019"
+        volumes:
+            - "mongo-data:/data/db"
+            - "./mongo/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:z"
+
+    upa-postgres:
+        build:
+            context: .
+            dockerfile: ./dockerfiles/Dockerfile-postgres
+        container_name: "upa-postgres"
+        volumes:
+            - "postgres-data:/var/lib/postgresql/data"
+        ports:
+            - "5432:5432"
+        expose:
+            - "5432"
+
+    upa-importer:
+        build:
+            context: .
+            dockerfile: ./dockerfiles/Dockerfile-importer
+        container_name: "upa-importer"
+        command: "bash /importer/entrypoint.sh"
+        depends_on: 
+            - upa-postgres
+            - upa-mongo
+
+    upa-api:
+        build:
+            context: .
+            dockerfile: ./dockerfiles/Dockerfile-api
+        container_name: "upa-api"
+        command: "bash /api/entrypoint.sh"
+        depends_on: 
+            - upa-postgres
+            - upa-mongo
+
+volumes:
+    mongo-data:
+    postgres-data:

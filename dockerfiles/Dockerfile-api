@@ -1,0 +1,14 @@
+FROM golang:1.14.9
+
+ENV NOSQL_DBNAME upa-covid19
+ENV NOSQL_HOST upa-mongo
+
+ENV SQL_DBNAME upa-covid19
+ENV SQL_HOST upa-postgres
+
+COPY ./api/* /api/
+
+WORKDIR /api
+
+RUN go get -d -v upa/api
+RUN go install -v upa/api

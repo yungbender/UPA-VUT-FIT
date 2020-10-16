@@ -1,0 +1,11 @@
+version: "3"
+services:
+    upa-api:
+        volumes:
+            - "./api:/api:Z"
+        command: "sleep infinity"
+
+    upa-importer:
+        volumes:
+            - "./importer:/importer:Z"
+        command: sleep infinity

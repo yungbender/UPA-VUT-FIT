@@ -1,0 +1,16 @@
+FROM python:3.8
+
+ENV NOSQL_DBNAME upa-covid19
+ENV NOSQL_HOST upa-mongo
+
+ENV SQL_DBNAME upa-covid19
+ENV SQL_HOST upa-postgress
+
+ENV PYTHONUNBUFFERED 1
+
+WORKDIR /importer
+
+COPY ./importer/* /importer/
+
+RUN pip3 install pipenv
+RUN pipenv install --system --deploy --ignore-pipfile
