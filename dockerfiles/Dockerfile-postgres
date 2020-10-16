@@ -1,0 +1,4 @@
+FROM postgres:9.6
+
+ENV POSTGRES_PASSWORD upa_postgres_pwd
+ENV POSTGRES_DB upa-covid19
