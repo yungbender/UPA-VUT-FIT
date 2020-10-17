@@ -1,3 +1,5 @@
+use upa-covid19
+
 db.createUser(
     {
         user: "upa-importer",
@@ -23,3 +25,6 @@ db.createUser(
         ]
     }
 )
+
+db.createCollection("covid-19")
+db.createCollection("deaths")
