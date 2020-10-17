@@ -6,7 +6,10 @@ MONGO_HOST = os.getenv("NOSQL_HOST", "localhost")
 MONGO_NAME = os.getenv("NOSQL_DBNAME", "upa-covid19")
 
 
-def mongo_connect(host=MONGO_HOST, name=MONGO_NAME, port=27017, connect=None):
-    client = MongoClient(host=host, port=port, connect=connect)
-    db = client[name]
-    return client, db
+class MongoDb(MongoClient):
+
+    def __init__(self, host=MONGO_HOST, port=27017, connect=None):
+        super().__init__(host=host, port=port, connect=connect)
+
+    def get_db(self, name=MONGO_NAME):
+        return self.get_database(name)
