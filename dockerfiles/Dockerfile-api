@@ -5,6 +5,8 @@ ENV NOSQL_HOST upa-mongo
 
 ENV SQL_DBNAME upa-covid19
 ENV SQL_HOST upa-postgres
+ENV SQL_USERNAME upa_api
+ENV SQL_PASSWORD upa_api_pwd
 
 COPY ./api/* /api/
 

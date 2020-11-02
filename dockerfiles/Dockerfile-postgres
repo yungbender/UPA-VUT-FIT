@@ -1,4 +1,9 @@
-FROM postgres:9.6
+FROM postgres:13
 
-ENV POSTGRES_PASSWORD upa_postgres_pwd
 ENV POSTGRES_DB upa-covid19
+ENV POSTGRES_USER upa_admin
+ENV POSTGRES_PASSWORD upa_postgres_pwd
+ENV PGUSER upa_admin
+ENV PGDATABASE upa-covid19
+
+COPY ./db/schema.sql /docker-entrypoint-initdb.d/
