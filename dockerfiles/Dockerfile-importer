@@ -4,7 +4,7 @@ ENV NOSQL_DBNAME upa-covid19
 ENV NOSQL_HOST upa-mongo
 
 ENV SQL_DBNAME upa-covid19
-ENV SQL_HOST upa-postgress
+ENV SQL_HOST upa-postgres
 ENV SQL_USERNAME upa_importer
 ENV SQL_PASSWORD upa_importer_pwd
 
