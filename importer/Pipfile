@@ -11,6 +11,7 @@ psycopg2-binary = "*"
 pymongo = "*"
 aiohttp = "*"
 beautifulsoup4 = "*"
+asyncpg = "*"
 
 [requires]
 python_version = "3.8"
