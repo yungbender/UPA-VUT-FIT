@@ -6,6 +6,7 @@ from middlewares import headers_setup
 from views.main import main_view
 from views.covid import covid_view
 from views.deaths import deaths_view
+from utils.db_handler import SqlHandler
 
 
 async def setup_app():

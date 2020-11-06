@@ -12,6 +12,7 @@ pymongo = "*"
 aiohttp = "*"
 beautifulsoup4 = "*"
 asyncpg = "*"
+python-dateutil = "*"
 
 [requires]
 python_version = "3.8"
