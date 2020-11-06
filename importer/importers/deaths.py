@@ -5,7 +5,7 @@ import json
 from csv import DictReader
 from bs4 import BeautifulSoup
 
-from mongo_handler import MongoDb
+from utils.mongo_handler import MongoDb
 from importers.base import BaseImporter
 from pymongo import InsertOne
 

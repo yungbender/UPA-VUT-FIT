@@ -1,3 +1,5 @@
 FROM mongo:4.4.1
 
 ENV MONGO_INITDB_DATABASE upa-covid19
+
+USER mongodb
