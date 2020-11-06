@@ -3,7 +3,7 @@ import logging
 import aiohttp
 import json
 
-from mongo_handler import MongoDb
+from utils.mongo_handler import MongoDb
 from importers.base import BaseImporter
 from pymongo import UpdateOne, InsertOne
 
