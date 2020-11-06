@@ -10,7 +10,10 @@ class BaseImporter:
     def __init__(self):
         self._in_progress = asyncio.Lock()
 
-    async def _import(self):
+    async def _import_mongo(self):
+        raise NotImplemented()
+
+    async def _import_postgres(self):
         raise NotImplemented()
 
     async def import_stats(self):

@@ -23,7 +23,7 @@ class SqlHandler:
 
     @staticmethod
     async def get(dbname=DBNAME, host=DBHOST, port=DBPORT, user=DBUSER, pwd=DBPWD):
-        if SqlHandler.__instance != None:
+        if SqlHandler.__instance is None:
             SqlHandler.__instance = await asyncpg.create_pool(min_size=MIN_CONN, max_size=MAX_CONN,
                                                              user=user, port=port, host=host, 
                                                              database=dbname, password=pwd)
@@ -31,12 +31,12 @@ class SqlHandler:
 
     @staticmethod
     async def reconnect(**kwargs):
-        if SqlHandler.__instance != None:
+        if SqlHandler.__instance is not None:
             SqlHandler.__instance.close()
             SqlHandler.__instance = None
         return await SqlHandler.reconnect(**kwargs)
 
     @staticmethod
     async def close():
-        if SqlHandler.__instance != None:
+        if SqlHandler.__instance is not None:
             SqlHandler.__instance.close()
