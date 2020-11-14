@@ -44,10 +44,16 @@ services:
             context: .
             dockerfile: ./dockerfiles/Dockerfile-api
         container_name: "upa-api"
-        command: "bash /api/entrypoint.sh"
+        command: "bash /go/src/upa/api/entrypoint.sh"
         depends_on: 
             - upa-postgres
             - upa-mongo
+        ports:
+            - "8080:8080"
+        expose:
+            - "8080"
+        environment:
+            - GIN_MODE=release
 
 volumes:
     mongo-data:

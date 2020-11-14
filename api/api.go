@@ -2,12 +2,33 @@ package main
 
 import (
 	"fmt"
-	"time"
+	"upa/api/middlewares"
+	"upa/api/models"
+	"upa/api/routes"
+
+	"github.com/gin-gonic/gin"
 )
 
+func setupGin() *gin.Engine {
+	engine := gin.Default()
+	group := engine.Group("/query")
+
+	group.GET("/infected", routes.InfectedHandler)
+	group.GET("/deaths", routes.DeathsHandler)
+	group.GET("/ratio", routes.RatioHandler)
+
+	engine.Use(middlewares.HeaderWare)
+	return engine
+}
+
 func main() {
-	for {
-		fmt.Println("Hello from API")
-		time.Sleep(time.Second * 10)
-	}
+	engine := setupGin()
+
+	// Db test
+	db := models.GetConn()
+	var t models.Death
+	db.Last(&t)
+	fmt.Println(t)
+
+	engine.Run("0.0.0.0:8080")
 }
