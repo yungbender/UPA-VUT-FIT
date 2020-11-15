@@ -8,6 +8,9 @@ import (
 	"gorm.io/gorm"
 )
 
+// DB postgres db connection handler
+var DB *gorm.DB
+
 type dbConfig struct {
 	dbName   string
 	host     string
@@ -27,8 +30,8 @@ func getDbConfig() dbConfig {
 
 var config dbConfig = getDbConfig()
 
-// GetConn returns postgres db connection
-func GetConn(newConf ...string) *gorm.DB {
+// SetConn sets postgres db connection
+func SetConn(newConf ...string) {
 	var dsn string
 	if newConf != nil {
 		dsn = fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s", newConf[0], newConf[1], newConf[2], newConf[3], newConf[4])
@@ -43,5 +46,5 @@ func GetConn(newConf ...string) *gorm.DB {
 		panic(err)
 	}
 
-	return db
+	DB = db
 }
