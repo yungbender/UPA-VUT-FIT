@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"upa/api/middlewares"
 	"upa/api/models"
 	"upa/api/routes"
@@ -24,11 +23,7 @@ func setupGin() *gin.Engine {
 func main() {
 	engine := setupGin()
 
-	// Db test
-	db := models.GetConn()
-	var t models.Death
-	db.Last(&t)
-	fmt.Println(t)
+	models.SetConn()
 
 	engine.Run("0.0.0.0:8080")
 }
