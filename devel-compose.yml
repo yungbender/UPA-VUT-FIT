@@ -2,7 +2,7 @@ version: "3"
 services:
     upa-api:
         volumes:
-            - "./api:/api:Z"
+            - "./api:/go/src/upa/api/:Z"
         command: "sleep infinity"
 
     upa-importer:
