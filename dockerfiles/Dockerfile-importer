@@ -10,10 +10,9 @@ ENV SQL_PASSWORD upa_importer_pwd
 
 ENV PYTHONUNBUFFERED 1
 
-WORKDIR /importer
+ADD ./importer/     /importer/
 
-COPY ./importer/*       /importer/
-COPY ./importer/views/* /importer/views/
+WORKDIR /importer
 
 RUN pip3 install pipenv
 RUN pipenv install --system --deploy --ignore-pipfile
