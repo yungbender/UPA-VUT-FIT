@@ -1,12 +1,29 @@
 package models
 
 import (
+	"errors"
 	"fmt"
 	"os"
+
+	"time"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
+
+type isodate string
+
+func (t *isodate) Scan(value interface{}) error {
+	result, ok := value.(time.Time)
+
+	if !ok {
+		return errors.New("Cannot unmarshal value")
+	}
+
+	str := result.Format("2006-01-02")
+	*t = isodate(str)
+	return nil
+}
 
 // DB postgres db connection handler
 var DB *gorm.DB
