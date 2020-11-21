@@ -55,6 +55,19 @@ services:
         environment:
             - GIN_MODE=release
 
+    upa-app:
+        build:
+            context: .
+            dockerfile: ./dockerfiles/Dockerfile-ui
+        container_name: "upa-app"
+        command: ["nginx", "-g", "daemon off;"]
+        depends_on:
+            - upa-api
+        ports:
+            - "80:80"
+        expose:
+            - "80"
+
 volumes:
     mongo-data:
     postgres-data:

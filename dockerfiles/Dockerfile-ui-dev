@@ -9,8 +9,8 @@ RUN npm install --legacy-peer-deps
 
 COPY ./ui/src/* /upa-ui/src/
 COPY ./ui/public/* /upa-ui/public/
-COPY ./ui/.env /upa-ui/
 
 ENV REACT_APP_API_URL localhost:8080
+ENV REACT_APP_IMPORTER_URL localhost:4200
 
 EXPOSE 1337
