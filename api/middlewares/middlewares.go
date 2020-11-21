@@ -5,8 +5,10 @@ import (
 )
 
 // HeaderWare middleware to set json headers
-func HeaderWare(c *gin.Context) {
-	c.Next()
-
-	c.Header("Content-Type", "application/json")
+func HeaderWare() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Header("Content-Type", "application/json")
+		c.Header("Access-Control-Allow-Origin", "*")
+		c.Next()
+	}
 }

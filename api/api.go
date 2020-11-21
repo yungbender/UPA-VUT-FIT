@@ -10,13 +10,14 @@ import (
 
 func setupGin() *gin.Engine {
 	engine := gin.Default()
+	engine.Use(middlewares.HeaderWare())
+
 	group := engine.Group("/query")
 
 	group.GET("/infected", routes.InfectedHandler)
 	group.GET("/deaths", routes.DeathsHandler)
 	group.GET("/ratio", routes.RatioHandler)
 
-	engine.Use(middlewares.HeaderWare)
 	return engine
 }
 

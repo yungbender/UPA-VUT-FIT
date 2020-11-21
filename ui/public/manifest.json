@@ -1,0 +1,13 @@
+{
+    "short_name": "UPA Covid19",
+    "name": "UPA Project with Covid19 theme",
+    "icons": [
+      {
+        "src": "favicon.png",
+        "sizes": "144x144",
+        "type": "image/png"
+      }
+    ],
+    "start_url": ".",
+    "display": "standalone"
+}
