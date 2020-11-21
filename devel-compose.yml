@@ -11,6 +11,9 @@ services:
         command: sleep infinity
 
     upa-app-dev:
+        volumes:
+            - "./ui/src:/upa-ui/src:Z"
+            - "./ui/public:/upa-ui/public:Z"
         build:
             context: .
             dockerfile: ./dockerfiles/Dockerfile-ui-dev
