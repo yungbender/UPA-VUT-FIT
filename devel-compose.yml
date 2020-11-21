@@ -9,3 +9,16 @@ services:
         volumes:
             - "./importer:/importer:Z"
         command: sleep infinity
+
+    upa-app-dev:
+        build:
+            context: .
+            dockerfile: ./dockerfiles/Dockerfile-ui-dev
+        container_name: "upa-app-dev"
+        command: tail -f /dev/null
+        depends_on:
+            - upa-api
+        ports:
+            - "1337:1337"
+        expose:
+            - "1337"
