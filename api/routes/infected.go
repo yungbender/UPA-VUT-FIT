@@ -20,6 +20,18 @@ func InfectedHandler(c *gin.Context) {
 	smaToRaw := c.Query("sma_to")
 	smaStepRaw := c.Query("sma_step")
 
+	if growthFromRaw == "" || smaFromRaw == "" || smaStepRaw == "" {
+		growthFromRaw = time.Now().AddDate(0, 0, -14).Format(layoutISO)
+		growthToRaw = time.Now().Format(layoutISO)
+		smaFromRaw = time.Now().AddDate(0, 0, -14).Format(layoutISO)
+		smaToRaw = time.Now().Format(layoutISO)
+		smaStepRaw = "10"
+	} else if growthToRaw == "" || smaToRaw == "" {
+		growthToRaw = time.Now().Format(layoutISO)
+		smaToRaw = time.Now().Format(layoutISO)
+		smaStepRaw = "10"
+	}
+
 	// Date parse
 	growthFrom, err := time.Parse(layoutISO, growthFromRaw)
 	if err != nil {
