@@ -11,7 +11,7 @@ type BaseResponseOK struct {
 type BaseResponseError struct {
 	Success bool   `json:"success"`
 	Message string `json:"message"`
-	Code    uint8  `json:"code"`
+	Code    uint16 `json:"code"`
 }
 
 func makeResponseOK(succ bool, code uint8, data interface{}) BaseResponseOK {
@@ -19,6 +19,6 @@ func makeResponseOK(succ bool, code uint8, data interface{}) BaseResponseOK {
 }
 
 // MakeResponseError creates a error json response
-func MakeResponseError(succ bool, msg string, code uint8) BaseResponseError {
+func MakeResponseError(succ bool, msg string, code uint16) BaseResponseError {
 	return BaseResponseError{Success: succ, Message: msg, Code: code}
 }
