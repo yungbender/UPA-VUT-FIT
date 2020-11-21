@@ -1,11 +1,13 @@
 package models
 
-import "time"
+import (
+	"time"
+)
 
 // Covid19 represents ORM model table covid19
 type Covid19 struct {
 	ID       uint
-	Date     time.Time `gorm:"column:date_"`
+	Date     isodate `gorm:"column:date_"`
 	Infected int
 	Cured    int
 	Deaths   int
