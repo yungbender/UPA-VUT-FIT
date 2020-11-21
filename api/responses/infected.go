@@ -12,7 +12,7 @@ type InfectedResponse struct {
 }
 
 // MakeInfectedResponse returns json response for infected api endpoint
-func MakeInfectedResponse(code uint8, inner InfectedResponse) BaseResponseOK {
+func MakeInfectedResponse(code int, inner InfectedResponse) BaseResponseOK {
 	base := makeResponseOK(true, code, inner)
 	return base
 }

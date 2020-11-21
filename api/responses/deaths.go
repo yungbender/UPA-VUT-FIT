@@ -2,13 +2,14 @@ package responses
 
 // DeathsResponse represents inner response of API for deaths endpoint
 type DeathsResponse struct {
-	X []float64 `json:"x"`
-	Y []float64 `json:"y"`
+	Deaths     []float64 `json:"deaths"`
+	Infected   []float64 `json:"infected"`
+	Timestamps []string  `json:"timestamps"`
 }
 
 // MakeDeathsResponse returns json response for deaths api endpoint
-func MakeDeathsResponse(code uint8, x []float64, y []float64) BaseResponseOK {
-	inner := DeathsResponse{X: x, Y: y}
+func MakeDeathsResponse(code int, deaths []float64, infected []float64, timestamps []string) BaseResponseOK {
+	inner := DeathsResponse{Deaths: deaths, Infected: infected, Timestamps: timestamps}
 	base := makeResponseOK(true, code, inner)
 	return base
 }
