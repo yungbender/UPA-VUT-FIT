@@ -2,6 +2,7 @@ package routes
 
 import (
 	"net/http"
+	"strconv"
 	"time"
 	"upa/api/models"
 	"upa/api/responses"
@@ -15,7 +16,11 @@ const layoutISO = "2006-01-02"
 func InfectedHandler(c *gin.Context) {
 	growthFromRaw := c.Query("growth_from")
 	growthToRaw := c.Query("growth_to")
+	smaFromRaw := c.Query("sma_from")
+	smaToRaw := c.Query("sma_to")
+	smaStepRaw := c.Query("sma_step")
 
+	// Date parse
 	growthFrom, err := time.Parse(layoutISO, growthFromRaw)
 	if err != nil {
 		panic(err)
@@ -26,6 +31,44 @@ func InfectedHandler(c *gin.Context) {
 		panic(err)
 	}
 
+	smaFrom, err := time.Parse(layoutISO, smaFromRaw)
+	if err != nil {
+		panic(err)
+	}
+
+	smaTo, err := time.Parse(layoutISO, smaToRaw)
+	if err != nil {
+		panic(err)
+	}
+
+	smaStep, err := strconv.Atoi(smaStepRaw)
+	if err != nil {
+		panic(err)
+	}
+
+	// SMA interval check
+	if smaFrom.Before(growthFrom) || smaTo.After(growthTo) {
+		resp := responses.MakeResponseError(
+			false,
+			"SMA interval has to be within Growth interval",
+			http.StatusBadRequest,
+		)
+		c.JSON(http.StatusBadRequest, resp)
+		return
+	}
+
+	// SMA step check
+	if int(smaTo.Sub(smaFrom).Hours()/24+1) < smaStep {
+		resp := responses.MakeResponseError(
+			false,
+			"SMA interval has to be at least as long as SMA step",
+			http.StatusBadRequest,
+		)
+		c.JSON(http.StatusBadRequest, resp)
+		return
+	}
+
+	// Absolute growth retrieve
 	var absGrowthRes []models.AbsGrowth
 	absGrowthQuery := models.DB.
 		Table("covid19").
@@ -36,6 +79,7 @@ func InfectedHandler(c *gin.Context) {
 	absGrowthQuery.
 		Scan(&absGrowthRes)
 
+	// Percentual growth retrieve
 	var percGrowthRes []models.PercGrowth
 	totalInfectedQuery := models.DB.
 		Table("covid19").
@@ -50,6 +94,24 @@ func InfectedHandler(c *gin.Context) {
 		Where("t1.date_ between ? and ?", growthFrom, growthTo).
 		Scan(&percGrowthRes)
 
-	resp := responses.MakeInfectedResponse(http.StatusOK, absGrowthRes, percGrowthRes)
+	// SMA retrieve
+	var smaRes []models.SMA
+	smaQuery := models.DB.
+		Table("(?) as t1", absGrowthQuery).
+		Select("date_, row_number() over (order by date_ asc) rnumber,"+
+			"avg(agrowth) over (order by date_ asc rows ? preceding) as sma", smaStep-1)
+
+	models.DB.
+		Table("(?) as t1", smaQuery).
+		Select("date_, sma").
+		Where("rnumber >= ?", smaStep).
+		Scan(&smaRes)
+
+	data := responses.InfectedResponse{
+		AbsGrowth:  absGrowthRes,
+		PercGrowth: percGrowthRes,
+		SMA:        smaRes,
+	}
+	resp := responses.MakeInfectedResponse(http.StatusOK, data)
 	c.JSON(http.StatusOK, resp)
 }

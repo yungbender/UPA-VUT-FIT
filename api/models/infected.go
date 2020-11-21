@@ -8,8 +8,14 @@ type AbsGrowth struct {
 	Date  time.Time `gorm:"column:date_" json:"date"`
 }
 
-// PercGrowth represents apercentual infected growth in one day
+// PercGrowth represents percentual infected growth in one day
 type PercGrowth struct {
 	Value float64   `gorm:"column:pgrowth" json:"value"`
+	Date  time.Time `gorm:"column:date_" json:"date"`
+}
+
+// SMA represents infected Simple Moving Average in one day
+type SMA struct {
+	Value float64   `gorm:"column:sma" json:"value"`
 	Date  time.Time `gorm:"column:date_" json:"date"`
 }
