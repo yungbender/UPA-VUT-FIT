@@ -1,0 +1,16 @@
+FROM node:15.2.1-alpine3.10
+
+ENV PORT 1337
+
+WORKDIR /upa-ui
+ENV PATH /upa-ai/node_modules/.bin:$PATH
+COPY ./ui/package.json /upa-ui/
+RUN npm install --legacy-peer-deps
+
+COPY ./ui/src/* /upa-ui/src/
+COPY ./ui/public/* /upa-ui/public/
+COPY ./ui/.env /upa-ui/
+
+ENV REACT_APP_API_URL localhost:8080
+
+EXPOSE 1337

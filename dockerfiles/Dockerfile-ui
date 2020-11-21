@@ -1,0 +1,24 @@
+FROM node:15.2.1-alpine3.10
+
+WORKDIR /upa-ui
+ENV PATH /upa-ai/node_modules/.bin:$PATH
+COPY ./ui/package.json /upa-ui/
+RUN npm install --legacy-peer-deps
+
+COPY ./ui/src/* /upa-ui/src/
+COPY ./ui/public/* /upa-ui/public/
+COPY ./ui/.env /upa-ui/
+
+RUN npm run build
+
+FROM nginx:1.19.4
+
+ENV PORT 80
+
+COPY --from=0 /upa-ui/build/ /usr/share/nginx/html
+RUN rm /etc/nginx/conf.d/default.conf
+COPY ./ui/nginx/nginx.conf /etc/nginx/conf.d/
+
+WORKDIR /upa-ui
+
+EXPOSE 80
