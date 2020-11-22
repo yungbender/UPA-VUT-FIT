@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 
 class Card extends React.Component {
     constructor(props)
@@ -9,9 +9,9 @@ class Card extends React.Component {
 
     render()
     {
-        return(<Row className="justify-content-md-center" style={{backgroundColor:"#090909", margin:"3%", padding:"0.75%"}}>
+        return(<Container fluid="true" className="justify-content-md-center" style={{backgroundColor:"#090909", margin:"3%", padding:"0.75%", borderRadius: "10px"}}>
                 {this.props.children}
-               </Row>);
+               </Container>);
     }
 }
 

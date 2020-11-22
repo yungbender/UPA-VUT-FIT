@@ -1,6 +1,8 @@
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area } from 'recharts';
-import { Alert, Spinner } from 'react-bootstrap'
+import { Alert, Row, Spinner } from 'react-bootstrap'
+import Card from './Card';
+import { Container } from 'react-bootstrap';
 
 
 class RatioGraph extends React.Component {
@@ -37,6 +39,15 @@ class RatioGraph extends React.Component {
         return tick + "%"
     }
 
+    legendFormatter(value, entry)
+    {
+        const { color } = entry;
+        if (value == "death_ratio")
+            return (<span style={{ color }}>Death Ratio</span>);
+        else
+            return (<span style={{ color }}>Cured Ratio</span>);
+    }
+
     render()
     {
         if(this.state.loading) 
@@ -51,27 +62,32 @@ class RatioGraph extends React.Component {
         }
 
         return (
-            <ResponsiveContainer width="100%" height={550} style={{paddingBottom: "2%"}}>
-                <AreaChart  data={this.state.data}
-                margin={{ top: 30, right: 30, left: 30, bottom: 30 }}>
-                <defs>
-                    <linearGradient id="colorDeaths" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#ec1111" stopOpacity={0.8}/>
-                    <stop offset="95%" stopColor="#ec1111" stopOpacity={0}/>
-                    </linearGradient>
-                    <linearGradient id="colorCured" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#76f66a" stopOpacity={0.8}/>
-                    <stop offset="95%" stopColor="#76f66a" stopOpacity={0}/>
-                    </linearGradient>
-                </defs>
-                <XAxis dataKey="date" angle={-25} textAnchor="end" />
-                <YAxis tickFormatter={this.tickHelper}/>
-                <CartesianGrid strokeDasharray="3 3" />
-                <Tooltip />
-                <Area type="monotone" dataKey="death_ratio" stroke="#ec1111" fillOpacity={1} fill="url(#colorDeaths)" />
-                <Area type="monotone" dataKey="cured_ratio" stroke="#76f66a" fillOpacity={1} fill="url(#colorCured)" />
-                </AreaChart>
-            </ResponsiveContainer>);
+            <Card style={{color: "whitesmoke"}}>
+                <Row>
+                    <ResponsiveContainer width="100%" minHeight={500} style={{paddingBottom: "2%"}}>
+                        <AreaChart  data={this.state.data}
+                        margin={{ top: 30, right: 30, left: 30, bottom: 30 }}>
+                        <defs>
+                            <linearGradient id="colorDeaths" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor="#ec1111" stopOpacity={1}/>
+                            <stop offset="100%" stopColor="#ec1111" stopOpacity={0.13}/>
+                            </linearGradient>
+                            <linearGradient id="colorCured" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#76f66a" stopOpacity={0.8}/>
+                            <stop offset="95%" stopColor="#76f66a" stopOpacity={0}/>
+                            </linearGradient>
+                        </defs>
+                        <XAxis dataKey="date" angle={-25} textAnchor="end" tick={{fill: "whitesmoke"}}/>
+                        <YAxis tickFormatter={this.tickHelper} tick={{fill: "whitesmoke"}}/>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <Tooltip contentStyle={{ backgroundColor: "#090909", border: "None", borderRadius: "8px"}} labelStyle={{color: "whitesmoke"}}/>
+                        <Area type="monotone" dataKey="death_ratio" stroke="#ec1111" fillOpacity={1} fill="url(#colorDeaths)" />
+                        <Area type="monotone" dataKey="cured_ratio" stroke="#76f66a" fillOpacity={1} fill="url(#colorCured)" />
+                        <Legend verticalAlign="top" wrapperStyle={{color: "whitesmoke", paddingBottom: "0.3%", marginTop: "-0.5%"}} formatter={this.legendFormatter}/>
+                        </AreaChart>
+                    </ResponsiveContainer>
+                </Row>
+            </Card>);
     }
 }
 
