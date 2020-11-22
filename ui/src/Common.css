@@ -1,0 +1,10 @@
+.react-datepicker-wrapper,
+.react-datepicker__input-container,
+.react-datepicker__input-container input  {
+  background-color: #302b2b;
+  color: white;
+}
+
+label {
+    color: white;
+}
