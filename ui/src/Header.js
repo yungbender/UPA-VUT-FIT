@@ -69,7 +69,7 @@ class Header extends React.Component {
         return (<Navbar style={{backgroundColor: "#000000"}} expand="lg">
                   <Navbar.Brand style={{color: "white"}}>UPA Covid19</Navbar.Brand>
                     <ButtonGroup className="ml-auto mr-1">
-                        <ButtonFetch text="Refresh deaths data" url={process.env.REACT_APP_IMPORTER_URL + "/covid19/fetch"} />
+                        <ButtonFetch text="Refresh covid19 data" url={process.env.REACT_APP_IMPORTER_URL + "/covid19/fetch"} />
                         <ButtonFetch text="Refresh deaths data" url={process.env.REACT_APP_IMPORTER_URL + "/deaths/fetch"} />
                     </ButtonGroup>
                 </Navbar>);
