@@ -2,10 +2,10 @@ CREATE TABLE covid19
 (
     id       SERIAL PRIMARY KEY,
     date_    date UNIQUE NOT NULL,
-    infected bigint NOT NULL,
-    cured    bigint NOT NULL,
-    deaths   bigint NOT NULL,
-    tested   bigint NOT NULL,
+    infected numeric NOT NULL,
+    cured    numeric NOT NULL,
+    deaths   numeric NOT NULL,
+    tested   numeric NOT NULL,
     ts       timestamp NOT NULL
 );
 
@@ -15,7 +15,7 @@ CREATE TABLE deaths
     date_from date NOT NULL,
     date_to   date NOT NULL,
     week      integer NOT NULL,
-    deaths    bigint NOT NULL,
+    deaths    numeric NOT NULL,
     age_from  float NOT NULL,
     age_to    float NOT NULL,
     CONSTRAINT unique_deaths UNIQUE(date_from, date_to, age_from, age_to)

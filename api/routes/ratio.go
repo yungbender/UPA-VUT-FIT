@@ -61,7 +61,7 @@ func RatioHandler(c *gin.Context) {
 	var curedData []models.ValueRes
 	models.DB.
 		Table("covid19").
-		Select("cured, deaths, date_ AS date").
+		Select("date_ as date, deaths, cured, TRUNC(deaths / NULLIF(deaths + cured, 0) * 100, 2) as death_ratio, TRUNC(cured / NULLIF(deaths + cured, 0) * 100, 2) as cured_ratio").
 		Where("date_ BETWEEN ? AND ?", params.dateFrom, params.dateTo).
 		Order("date_").
 		Scan(&curedData)
