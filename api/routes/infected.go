@@ -111,7 +111,8 @@ func InfectedHandler(c *gin.Context) {
 	smaQuery := models.DB.
 		Table("(?) as t1", absGrowthQuery).
 		Select("date_, row_number() over (order by date_ asc) rnumber,"+
-			"avg(agrowth) over (order by date_ asc rows ? preceding) as sma", smaStep-1)
+			"avg(agrowth) over (order by date_ asc rows ? preceding) as sma", smaStep-1).
+		Where("date_ between ? and ?", smaFrom, smaTo)
 
 	models.DB.
 		Table("(?) as t1", smaQuery).
