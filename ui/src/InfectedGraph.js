@@ -21,6 +21,7 @@ function InfectedGraph() {
     const [smaTo, setSmaTo] = useState(new Date());
     const [smaStep, setSmaStep] = useState(10);
     const [smaTag, setSmaTag] = useState("SMA "+smaStep.toString());
+    const [refresh, setRefresh] = useState(false);
 
     const [showDateWarning, setShowDateWarning] = useState(false);
     const [warning, setWarning] = useState("");
@@ -57,6 +58,11 @@ function InfectedGraph() {
                 }
                 setData(convertApiData(data.data))
                 setLoading(false)
+                setError(null);
+                if (refresh)
+                {
+                    setRefresh(false);
+                }
             }
         )
     };
@@ -101,6 +107,29 @@ function InfectedGraph() {
     }
 
     useEffect(() => {
+        if (!refresh) {
+            return;
+        };
+        const interval = setInterval(() => {
+            fetch(apiUrl, {method: "GET"})
+                .then((result) => refreshGraph(result));
+        }, 5000);
+        return () => clearInterval(interval);
+    }, [refresh]);
+
+    useEffect(() => {
+        fetch(apiUrl, {method: "GET"})
+             .then((result) => refreshGraph(result))
+             .catch(_ => {
+                setError("Cannot fetch API endpoint");
+                setLoading(false);
+                if (!refresh) {
+                    setRefresh(true);
+                }
+            });
+    }, [apiUrl]);
+
+    useEffect(() => {
         setApiUrl(
             "http://" + process.env.REACT_APP_API_URL + "/query/infected" +
             "?growth_from=" + growthFrom.toISOString().substring(0,10) +
@@ -110,11 +139,6 @@ function InfectedGraph() {
             "&sma_step=" + smaStep
         );
     }, [growthFrom, growthTo, smaFrom, smaTo, smaStep]);
-
-    useEffect(() => {
-        fetch(apiUrl, {method: "GET"})
-             .then((result) => refreshGraph(result));
-    }, [apiUrl]);
 
     if (loading) {
         return (
@@ -136,12 +160,12 @@ function InfectedGraph() {
         <Card>
             <Row>
                 <Col align="center">
-                <Toast show={showDateWarning} onClose={toggleShowDateWarning} padding={{ top: 30, right: 30, left: 300, bottom: 30 }}>
-                <Toast.Header>
-                <strong className="mr-auto">Date error</strong>
-                </Toast.Header>
-                <Toast.Body>{warning}</Toast.Body>
-                </Toast>
+                    <Toast show={showDateWarning} onClose={toggleShowDateWarning}>
+                        <Toast.Header>
+                            <strong className="mr-auto">Date error</strong>
+                        </Toast.Header>
+                        <Toast.Body>{warning}</Toast.Body>
+                    </Toast>
                 </Col>
             </Row>
             <Row>
@@ -162,12 +186,12 @@ function InfectedGraph() {
             </Row>
             <Row style={{paddingTop: "2%"}}>
                 <Col align="center">
-                    <label>From date:</label>
+                    <label>Date from:</label>
                     <DatePicker  selected={growthFrom} onChange={handleGrowthFromChange} dateFormat="yyyy-MM-dd"
                     todayButton="Today"/>
                 </Col>
                 <Col align="center">
-                    <label>To date:</label>
+                    <label>Date to:</label>
                     <DatePicker selected={growthTo} onChange={handleGrowthToChange} dateFormat="yyyy-MM-dd"
                     todayButton="Today"/>
                 </Col>
