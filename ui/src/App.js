@@ -3,8 +3,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
 import Header from './Header';
 import RatioGraph from './RatioGraph';
-import { Row } from 'react-bootstrap';
-import Card from './Card';
 import Footer from './Footer';
 
 

@@ -2,7 +2,6 @@ import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import { Alert, Row, Spinner } from 'react-bootstrap'
 import Card from './Card';
-import { Container } from 'react-bootstrap';
 
 
 class RatioGraph extends React.Component {
@@ -12,26 +11,40 @@ class RatioGraph extends React.Component {
         this.api_url = "http://" + process.env.REACT_APP_API_URL + "/query/ratio?date_from=2020-04-01";
         this.state = {data: null, 
                       error: null, loading: true};
+
+        this.refreshGraph = this.refreshGraph.bind(this);
+        this.componentDidMount = this.componentDidMount.bind(this);
+        this.tickHelper = this.tickHelper.bind(this);
+        this.legendFormatter = this.legendFormatter.bind(this);
+        this.render = this.render.bind(this);
+        this.interval = null;
     }
 
     refreshGraph(rawData)
     {
         rawData.json().then(
             (data) => {
-                console.log(data);
                 if (!data.success)
                 {
                     this.setState({error: "Unsuccessful API fetch", loading: false})
                     return
                 }
-                this.setState({data: data.data, loading: false})})
+                this.setState({data: data.data, loading: false, error: null});
+                if (this.interval != null)
+                {
+                    clearInterval(this.interval);
+                    this.interval = null;
+                }
+            })
     }
 
     componentDidMount()
     {
         fetch(this.api_url, {method: "GET"})
             .then((result) => this.refreshGraph(result))
-            .catch(_ => this.setState({error: "Cannot fetch API endpoint", loading: false}));
+            .catch(_ => {this.setState({error: "Cannot fetch API endpoint", loading: false}); 
+                         if (this.interval == null)
+                            this.interval = setInterval(this.componentDidMount, 5000);});
     }
 
     tickHelper(tick)
@@ -52,13 +65,18 @@ class RatioGraph extends React.Component {
     {
         if(this.state.loading) 
         {
-            return (<Spinner animation="border" role="status" variant="light">
-                    <span className="sr-only">Loading...</span>
-                    </Spinner>);
+            return (<Card>
+                        <Spinner animation="border" role="status" variant="light" style={{marginLeft: "50%"}}>
+                        <span className="sr-only">Loading...</span>
+                        </Spinner>
+                    </Card>);
         }
+
         else if(this.state.error != null)
         {
-            return (<Alert variant="danger">{this.state.error}</Alert>)
+            return (<Card style={{color: "whitesmoke"}}>
+                            <p style={{color: "red", textAlign: "center"}}>Error: {this.state.error}</p>
+                    </Card>);
         }
 
         return (
