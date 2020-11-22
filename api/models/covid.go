@@ -8,10 +8,10 @@ import (
 type Covid19 struct {
 	ID       uint
 	Date     isodate `gorm:"column:date_"`
-	Infected int
-	Cured    int
-	Deaths   int
-	Tested   int
+	Infected float64
+	Cured    float64
+	Deaths   float64
+	Tested   float64
 	Ts       time.Time
 }
 
