@@ -21,11 +21,6 @@ function RatioGraph() {
 
     const [apiUrl, setApiUrl] = useState("");
 
-    const [showDateWarning, setShowDateWarning] = useState(false);
-    const [warning, setWarning] = useState("");
-
-    const toggleShowDateWarning = () => setShowDateWarning(!showDateWarning);
-
     const refreshGraph = (rawData) => {
         rawData.json().then(
             (data) => {
@@ -58,27 +53,11 @@ function RatioGraph() {
             return (<span style={{ color }}>Cured ratio</span>);
     };
 
-    const handleWarning = (msg) => {
-        setWarning(msg);
-        if (!showDateWarning) {
-            toggleShowDateWarning();
-        };
-    }
-
     const handleDateFromChange = (date) => {
-        if (date > dateTo) {
-            handleWarning("Negative date interval");
-            return;
-        };
         setDateFrom(date);
     };
 
     const handleDateToChange = (date) => {
-
-        if (date < dateFrom) {
-            handleWarning("Negative date interval");
-            return;
-        };
         setDateTo(date);
     };
 
@@ -131,16 +110,6 @@ function RatioGraph() {
     return (
         <Card style={{color: "whitesmoke"}}>
             <Row>
-                <Col align="center">
-                    <Toast show={showDateWarning} onClose={toggleShowDateWarning}>
-                        <Toast.Header>
-                            <strong className="mr-auto">Date error</strong>
-                        </Toast.Header>
-                        <Toast.Body>{warning}</Toast.Body>
-                    </Toast>
-                </Col>
-            </Row>
-            <Row>
                 <ResponsiveContainer width="100%" minHeight={500} style={{paddingBottom: "2%"}}>
                     <AreaChart  data={data}
                     margin={{ top: 30, right: 30, left: 30, bottom: 30 }}>
@@ -168,12 +137,14 @@ function RatioGraph() {
             <Col align="center">
                     <label>Date from:</label>
                     <DatePicker  selected={dateFrom} onChange={handleDateFromChange} dateFormat="yyyy-MM-dd"
-                    todayButton="Today"/>
+                    todayButton="Today" selectsStart startDate={dateFrom} maxDate={new Date(dateTo.getTime() - 864e5)}
+                    endDate={dateTo}/>
                 </Col>
                 <Col align="center">
                     <label>Date to:</label>
                     <DatePicker selected={dateTo} onChange={handleDateToChange} dateFormat="yyyy-MM-dd"
-                    todayButton="Today"/>
+                    todayButton="Today" selectsEnd startDate={dateFrom} minDate={new Date(dateFrom.getTime() + 864e5)}
+                    endDate={dateTo} maxDate={new Date()}/>
                 </Col>
             </Row>
         </Card>

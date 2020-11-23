@@ -20,15 +20,11 @@ function InfectedGraph() {
     const [smaFrom, setSmaFrom] = useState(new Date(Date.now() - 12096e5));
     const [smaTo, setSmaTo] = useState(new Date());
     const [smaStep, setSmaStep] = useState(10);
+    const [smaMax, setSmaMax] = useState(14);
     const [smaTag, setSmaTag] = useState("SMA "+smaStep.toString());
     const [refresh, setRefresh] = useState(false);
 
-    const [showDateWarning, setShowDateWarning] = useState(false);
-    const [warning, setWarning] = useState("");
-
     const [apiUrl, setApiUrl] = useState("");
-
-    const toggleShowDateWarning = () => setShowDateWarning(!showDateWarning);
 
     const convertApiData = (data_to_convert) => {
         console.log(data_to_convert);
@@ -67,28 +63,12 @@ function InfectedGraph() {
         )
     };
 
-    const handleWarning = (msg) => {
-        setWarning(msg);
-        if (!showDateWarning) {
-            toggleShowDateWarning();
-        };
-    }
-
     const handleGrowthFromChange = (date) => {
-        if (date > growthTo) {
-            handleWarning("Negative growth date interval");
-            return;
-        };
         setGrowthFrom(date);
         setSmaFrom(date);
     };
 
     const handleGrowthToChange = (date) => {
-
-        if (date < growthFrom) {
-            handleWarning("Negative growth date interval");
-            return;
-        };
         setGrowthTo(date);
         setSmaTo(date);
     };
@@ -138,7 +118,16 @@ function InfectedGraph() {
             "&sma_to=" + smaTo.toISOString().substring(0,10) +
             "&sma_step=" + smaStep
         );
-    }, [growthFrom, growthTo, smaFrom, smaTo, smaStep]);
+    }, [smaMax, smaStep]);
+
+    useEffect(() => {
+        let time_diff = Math.round(((growthTo.getTime() - growthFrom.getTime()) / (1000 * 3600 * 24)));
+        if (smaStep > time_diff) {
+            setSmaStep(time_diff+1);
+            setSmaTag("SMA "+(time_diff+1).toString());
+        }
+        setSmaMax(time_diff+1);
+    }, [growthFrom, growthTo, smaFrom, smaTo]);
 
     if (loading) {
         return (
@@ -159,16 +148,6 @@ function InfectedGraph() {
     return (
         <Card>
             <Row>
-                <Col align="center">
-                    <Toast show={showDateWarning} onClose={toggleShowDateWarning}>
-                        <Toast.Header>
-                            <strong className="mr-auto">Date error</strong>
-                        </Toast.Header>
-                        <Toast.Body>{warning}</Toast.Body>
-                    </Toast>
-                </Col>
-            </Row>
-            <Row>
                 <ResponsiveContainer width="100%" minHeight={500} style={{paddingBottom: "2%"}}>
                     <ComposedChart data={data}
                     margin={{ top: 30, right: 30, left: 30, bottom: 30 }}>
@@ -188,16 +167,20 @@ function InfectedGraph() {
                 <Col align="center">
                     <label>Date from:</label>
                     <DatePicker  selected={growthFrom} onChange={handleGrowthFromChange} dateFormat="yyyy-MM-dd"
-                    todayButton="Today"/>
+                    todayButton="Today" selectsStart startDate={growthFrom} maxDate={new Date(growthTo.getTime() - 864e5)}
+                    endDate={growthTo}/>
+
                 </Col>
                 <Col align="center">
                     <label>Date to:</label>
-                    <DatePicker selected={growthTo} onChange={handleGrowthToChange} dateFormat="yyyy-MM-dd"
-                    todayButton="Today"/>
+                    <DatePicker  selected={growthTo} onChange={handleGrowthToChange} dateFormat="yyyy-MM-dd"
+                    todayButton="Today" selectsEnd startDate={growthFrom} minDate={new Date(growthFrom.getTime() + 864e5)}
+                    endDate={growthTo} maxDate={new Date()}/>
                 </Col>
                 <Col align="center">
                     <label>SMA step:</label>
-                    <NumericInput strict={true} min={1} value={smaStep} onChange={handleSmaStepChange} 
+                    <NumericInput strict={true} min={1} max={smaMax} 
+                    value={smaStep} onChange={handleSmaStepChange} 
                     style={{
                         input: {
                             background: '#302b2b',
