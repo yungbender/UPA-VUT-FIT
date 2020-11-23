@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
     ComposedChart, Line, XAxis, YAxis, CartesianGrid,
-    Tooltip, Legend, Bar, ResponsiveContainer,
+    Tooltip, Legend, Bar, ResponsiveContainer, BarChart,
 } from 'recharts';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -33,7 +33,7 @@ function InfectedGraph() {
             let obj = {
                 "date" : data_to_convert["abs_growth"][i].date,
                 "agrowth" : data_to_convert["abs_growth"][i].value,
-                "pgrowth" : data_to_convert["perc_growth"][i].value,
+                "pgrowth" : data_to_convert["perc_growth"][i].value
             };
             if (i >= (smaStep - 1)) {
                 obj["sma"] = data_to_convert["sma"][i-smaStep+1].value;
@@ -82,9 +82,15 @@ function InfectedGraph() {
         const { color } = entry;
         if (value == "Absolute growth")
             return (<span style={{ color }}>Absolute growth</span>);
+        else if (value == "Percentual growth")
+            return (<span style={{ color }}>Percentual growth</span>);
         else
             return (<span style={{ color }}>{smaTag}</span>);
     }
+
+    const tickHelper = (tick) => {
+        return tick + "%";
+    };
 
     useEffect(() => {
         if (!refresh) {
@@ -188,6 +194,21 @@ function InfectedGraph() {
                         },
                     }}/>
                 </Col>
+            </Row>
+            <Row>
+                <ResponsiveContainer width="100%" minHeight={500} style={{paddingBottom: "2%"}}>
+                    <BarChart data={data}
+                    margin={{ top: 30, right: 30, left: 30, bottom: 30 }}>
+                        <XAxis angle={-25} textAnchor="end" dataKey="date" tick={{fill: "whitesmoke"}}/>
+                        <YAxis tickFormatter={tickHelper} tick={{fill: "whitesmoke"}}/>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <Tooltip contentStyle={{ backgroundColor: "#090909", border: "None", borderRadius: "8px"}}
+                         labelStyle={{color: "whitesmoke"}}/>
+                        <Legend verticalAlign="top" wrapperStyle={{color: "whitesmoke", paddingBottom: "0.3%", marginTop: "-0.5%"}} 
+                        formatter={legendFormatter}/>
+                        <Bar name="Percentual growth" dataKey="pgrowth" fill="#ec1111"></Bar>
+                    </BarChart>
+                </ResponsiveContainer>
             </Row>
         </Card>
     );
