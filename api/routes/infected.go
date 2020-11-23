@@ -100,8 +100,8 @@ func InfectedHandler(c *gin.Context) {
 
 	models.DB.
 		Table("(?) as t1", absGrowthQuery).
-		Select("t1.date_, t1.agrowth / nullif(lag(t2.total, 1, t2.total) "+
-			"over (order by t2.date_), 0) as pgrowth").
+		Select("t1.date_, trunc(t1.agrowth / nullif(lag(t2.total, 1, t2.total) "+
+			"over (order by t2.date_), 0) *100 , 2) as pgrowth").
 		Joins("inner join (?) as t2 on t1.date_ = t2.date_", totalInfectedQuery).
 		Where("t1.date_ between ? and ?", growthFrom, growthTo).
 		Scan(&percGrowthRes)
