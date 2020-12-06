@@ -12,5 +12,7 @@ ADD ./api/ /go/src/upa/api/
 
 WORKDIR /go/src/upa/api/
 
+RUN apt-get update && apt-get install -f -y postgresql-client
+
 RUN go get -d -v upa/api
 RUN go install -v
