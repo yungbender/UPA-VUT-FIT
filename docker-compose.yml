@@ -64,7 +64,7 @@ services:
             context: .
             dockerfile: ./dockerfiles/Dockerfile-ui
         container_name: "upa-app"
-        command: ["nginx", "-g", "daemon off;"]
+        command: "bash /entrypoint.sh"
         depends_on:
             - upa-api
         ports:

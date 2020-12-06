@@ -20,6 +20,7 @@ ENV PORT 80
 COPY --from=0 /upa-ui/build/ /usr/share/nginx/html
 RUN rm /etc/nginx/conf.d/default.conf
 COPY ./ui/nginx/nginx.conf /etc/nginx/conf.d/
+COPY ./ui/entrypoint.sh /entrypoint.sh
 
 WORKDIR /upa-ui
 
